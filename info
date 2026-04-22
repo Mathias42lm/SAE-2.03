@@ -14,6 +14,8 @@ https://stackoverflow.com/questions/52560442/docker-compose-file-to-create-a-con
 
 https://slash-root.fr/docker-compose-wordpress-mariadb/
 
+docker exec mariadb mariadb-dump -u mathias -proot sae > init.sql
+
 Site web q fqire dqns le site web ==> lien faire portfolio et une doc 
 Construire des truc pour faire vendre le site ==> partie base de donner 
 

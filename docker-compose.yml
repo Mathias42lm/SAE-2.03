@@ -1,46 +1,53 @@
 services:
   wordpress:
     image: wordpress
-    container_name: "wordpress"
+    container_name: wordpress
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - 8081:80
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: "wordpress"
-      WORDPRESS_DB_PASSWORD: "wordpress_db_password"
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: mathias
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: sae
     volumes:
       - ./wordpress:/var/www/html
       - /etc/localtime:/etc/localtime:ro
     depends_on:
-      - db
+      - mariadb
     networks:
       - network
 
-  db:
+  mariadb:
     image: mariadb
-    container_name: "wordpress-db"
+    container_name: mariadb
     restart: unless-stopped
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: "wordpress"
-      MYSQL_PASSWORD: "wordpress_db_password"
+      MYSQL_DATABASE: sae
+      MYSQL_USER: mathias
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
     volumes:
       - ./db:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - network
   phpmyadmin:
-    image: phpmyadmin
+    image: phpmyadmin/phpmyadmin
     restart: always
-    ports:
-      - 8081:80
     environment:
-      - PMA_ARBITRARY=1
+      PMA_HOST: mariadb
+      PMA_USER: mathias
+      PMA_PASSWORD: root
+    ports:
+      - 8080:80
     depends_on:
-      - db
+      - mariadb
+    networks:
+      - network
 
 networks:
   network:
