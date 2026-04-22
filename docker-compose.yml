@@ -29,6 +29,7 @@ services:
       MYSQL_PASSWORD: root
     volumes:
       - ./db:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - sae_network
