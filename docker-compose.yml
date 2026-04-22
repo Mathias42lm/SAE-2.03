@@ -4,7 +4,7 @@ services:
     container_name: wordpress
     restart: unless-stopped
     ports:
-      - 8081:80
+      - "8081:80"
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: mathias
@@ -16,7 +16,7 @@ services:
     depends_on:
       - mariadb
     networks:
-      - network
+      - sae_network
 
   mariadb:
     image: mariadb
@@ -27,30 +27,27 @@ services:
       MYSQL_DATABASE: sae
       MYSQL_USER: mathias
       MYSQL_PASSWORD: root
-    ports:
-      - 3306:3306
     volumes:
       - ./db:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - network
+      - sae_network
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    restart: always
+    container_name: phpmyadmin
+    restart: unless-stopped
     environment:
       PMA_HOST: mariadb
       PMA_USER: mathias
       PMA_PASSWORD: root
     ports:
-      - 8080:80
+      - "8080:80"
     depends_on:
       - mariadb
     networks:
-      - network
+      - sae_network
 
 networks:
-  network:
+  sae_network:
     driver: bridge
-
-  
