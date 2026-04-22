@@ -1,0 +1,49 @@
+services:
+  wordpress:
+    image: wordpress
+    container_name: "wordpress"
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: "wordpress"
+      WORDPRESS_DB_PASSWORD: "wordpress_db_password"
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./wordpress:/var/www/html
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - db
+    networks:
+      - network
+
+  db:
+    image: mariadb
+    container_name: "wordpress-db"
+    restart: unless-stopped
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: "wordpress"
+      MYSQL_PASSWORD: "wordpress_db_password"
+    volumes:
+      - ./db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - network
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - db
+
+networks:
+  network:
+    driver: bridge
+
+  

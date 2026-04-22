@@ -1,0 +1,23 @@
+https://hub.docker.com/_/wordpress
+
+https://hub.docker.com/_/mysql
+
+https://hub.docker.com/_/phpmyadmin
+
+https://hub.docker.com/_/mariadb
+
+https://github.com/Mathias42lm/SAE-2.03
+
+https://docs.docker.com/compose/gettingstarted/
+
+https://stackoverflow.com/questions/52560442/docker-compose-file-to-create-a-container-with-multiple-images
+
+https://slash-root.fr/docker-compose-wordpress-mariadb/
+
+Site web q fqire dqns le site web ==> lien faire portfolio et une doc 
+Construire des truc pour faire vendre le site ==> partie base de donner 
+
+Un script qui permet de cree les different conteneur ==> les 3 avec commentaire a l'interieur
+
+docker compose stop
+docker compose up -d
