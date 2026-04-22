@@ -1,59 +1,26 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# --- Base de données ---
+# On ignore les fichiers binaires de MariaDB (trop lourds, instables sur Git)
+db/*
+!db/.gitkeep
 
-# Folder config file
-Desktop.ini
+# --- WordPress ---
+# On ignore le "Core" de WordPress (déjà présent dans l'image Docker)
+# pour ne garder que tes thèmes, plugins et uploads.
+wordpress/wp-admin/
+wordpress/wp-includes/
+wordpress/*.php
+!wordpress/wp-content/
+!wordpress/index.php
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Sécurité : On ignore le fichier de configuration contenant les credentials
+# Tu devras utiliser des variables d'environnement dans ton docker-compose
+wordpress/wp-config.php
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+# --- Logs et Temporaires ---
+*.log
 .DS_Store
-.AppleDouble
-.LSOverride
+.env
 
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-.jenkins-external
-
-tmp
-backups
-wordpress/*
-!wordpress/wp-content
-
-wordpress/wp-content/*
-!wordpress/wp-content/plugins
-!wordpress/wp-content/themes
-
-wordpress/wp-content/plugins/*
-!wordpress/wp-content/plugins/.gitkeep
-
-wordpress/wp-content/themes/*
-!wordpress/wp-content/themes/.gitkeep
+# --- Dump SQL ---
+# On autorise le fichier d'initialisation pour la portabilité
+!init.sql
