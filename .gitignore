@@ -1,26 +1,18 @@
-# --- Base de données ---
-# On ignore les fichiers binaires de MariaDB (trop lourds, instables sur Git)
+
 db/*
 !db/.gitkeep
 
-# --- WordPress ---
-# On ignore le "Core" de WordPress (déjà présent dans l'image Docker)
-# pour ne garder que tes thèmes, plugins et uploads.
-wordpress/wp-admin/
-wordpress/wp-includes/
-wordpress/*.php
-!wordpress/wp-content/
-!wordpress/index.php
 
-# Sécurité : On ignore le fichier de configuration contenant les credentials
-# Tu devras utiliser des variables d'environnement dans ton docker-compose
+wordpress/*
+
+!wordpress/wp-content/themes/
+!wordpress/wp-content/plugins/
+!wordpress/wp-content/uploads/
 wordpress/wp-config.php
 
-# --- Logs et Temporaires ---
 *.log
 .DS_Store
 .env
 
-# --- Dump SQL ---
-# On autorise le fichier d'initialisation pour la portabilité
+
 !init.sql
