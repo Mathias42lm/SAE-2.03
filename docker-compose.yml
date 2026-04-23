@@ -40,8 +40,6 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mariadb
-      PMA_USER: mathias
-      PMA_PASSWORD: root
     ports:
       - "8080:80"
     depends_on:

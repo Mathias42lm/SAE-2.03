@@ -10,8 +10,8 @@ echo -e "${GREEN}[*] Initialisation du déploiement SAE-2.03...${NC}"
 # 1. Nettoyage des artefacts Docker fantômes
 if [ -d "./init.sql" ]; then
     echo -e "${RED}[!] Alerte : init.sql est un répertoire (erreur Docker). Suppression...${NC}"
-    rm -rf ./init.sql
-    touch init.sql
+    rm -rf ./save/init.sql
+    touch ./save/init.sql
 fi
 
 # 2. Correction préventive des permissions sur l'hôte
