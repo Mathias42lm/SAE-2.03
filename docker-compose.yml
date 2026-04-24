@@ -4,7 +4,7 @@ services:
     container_name: wordpress
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "80:80"
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: mathias
