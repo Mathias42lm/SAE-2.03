@@ -1,51 +1,60 @@
-#!/bin/bash
+# Configuration de l'encodage pour les emojis et couleurs
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
 # Couleurs pour le feedback
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m'
+$GREEN = "Green"
+$RED = "Red"
+$WHITE = "White"
 
-echo -e "${GREEN}[*] Initialisation du déploiement SAE-2.03...${NC}"
+Write-Host "[*] Initialisation du déploiement SAE-2.03..." -ForegroundColor $GREEN
 
 # 1. Nettoyage des artefacts Docker fantômes
-if [ -d "./init.sql" ]; then
-    echo -e "${RED}[!] Alerte : init.sql est un répertoire (erreur Docker). Suppression...${NC}"
-    rm -rf ./save/init.sql
-    touch ./save/init.sql
-fi
+# Sous Windows/Docker Desktop, les montages de fichiers inexistants créent parfois des dossiers
+if (Test-Path "./init.sql" -PathType Container) {
+    Write-Host "[!] Alerte : init.sql est un répertoire. Correction..." -ForegroundColor $RED
+    Remove-Item -Recurse -Force "./save/init.sql"
+    New-Item -ItemType File "./save/init.sql" > $null
+}
 
-# 2. Correction préventive des permissions sur l'hôte
-# MariaDB (UID 999) et WordPress (UID 33)
-echo "[*] Correction des permissions des volumes..."
-sudo chown -R 999:999 ./db 2>/dev/null || echo "Info: volume db non encore créé"
-sudo chown -R 33:33 ./wordpress 2>/dev/null || echo "Info: volume wordpress non encore créé"
+# 2. Correction des permissions sur l'hôte
+# Note : Sur Windows (NTFS), chown 999:999 n'est pas applicable directement. 
+# Docker Desktop gère généralement le mapping. On s'assure juste que les dossiers existent.
+Write-Host "[*] Vérification des répertoires de volumes..."
+foreach ($dir in @("./db", "./wordpress")) {
+    if (-not (Test-Path $dir)) {
+        New-Item -ItemType Directory $dir | Out-Null
+    }
+}
 
 # 3. Lancement de la stack
-echo "[*] Lancement de Docker Compose..."
+Write-Host "[*] Lancement de Docker Compose..."
 docker compose up -d --remove-orphans
 
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}[+] Stack démarrée.${NC}"
-else
-    echo -e "${RED}[-] Erreur lors du docker compose up.${NC}"
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "[+] Stack démarrée." -ForegroundColor $GREEN
+} else {
+    Write-Host "[-] Erreur lors du docker compose up." -ForegroundColor $RED
     exit 1
-fi
+}
 
 # 4. Correction dynamique des permissions (post-boot)
-echo "[*] Application des ACL internes (www-data)..."
+# On exécute les commandes à l'intérieur du conteneur Linux
+Write-Host "[*] Application des ACL internes (www-data)..."
 docker exec -it wordpress chown -R www-data:www-data /var/www/html
-docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
-docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
+docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} ";"
+docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} ";"
 
 # 5. Healthcheck MariaDB
-echo -n "[*] Attente de MariaDB..."
-until docker exec mariadb mariadb-admin ping -h localhost --silent; do
-    echo -n "."
-    sleep 2
-done
-echo -e "\n${GREEN}[+] MariaDB est prêt.${NC}"
+Write-Host -NoNewline "[*] Attente de MariaDB..."
+while ($true) {
+    docker exec mariadb mariadb-admin ping -h localhost --silent 2>$null
+    if ($LASTEXITCODE -eq 0) { break }
+    Write-Host -NoNewline "."
+    Start-Sleep -Seconds 2
+}
+Write-Host "`n[+] MariaDB est prêt." -ForegroundColor $GREEN
 
-echo -e "${GREEN}[!] Déploiement terminé avec succès.${NC}"
-echo "Wordpress: http://localhost:80"
-echo "phpMyAdmin: http://localhost:8080"
-echo "Wordpress Admin : http://0.0.0.0:80/wp-admin/"
+Write-Host "[!] Déploiement terminé avec succès." -ForegroundColor $GREEN
+Write-Host "Wordpress: http://localhost:80"
+Write-Host "phpMyAdmin: http://localhost:8080"
+Write-Host "Wordpress Admin : http://localhost:80/wp-admin/"
