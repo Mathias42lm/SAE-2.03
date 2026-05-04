@@ -10,12 +10,11 @@ echo -e "${GREEN}[*] Initialisation du déploiement SAE-2.03...${NC}"
 # 1. Nettoyage des artefacts Docker fantômes
 if [ -d "./init.sql" ]; then
     echo -e "${RED}[!] Alerte : init.sql est un répertoire (erreur Docker). Suppression...${NC}"
-    rm -rf ./save/init.sql
-    touch ./save/init.sql
+    rm -rf ./init.sql
+    touch ./init.sql
 fi
 
 # 2. Correction préventive des permissions sur l'hôte
-# MariaDB (UID 999) et WordPress (UID 33)
 echo "[*] Correction des permissions des volumes..."
 sudo chown -R 999:999 ./db 2>/dev/null || echo "Info: volume db non encore créé"
 sudo chown -R 33:33 ./wordpress 2>/dev/null || echo "Info: volume wordpress non encore créé"
@@ -31,13 +30,22 @@ else
     exit 1
 fi
 
-# 4. Correction dynamique des permissions (post-boot)
+# 4. Restauration WordPress (Thèmes, Plugins, Uploads)
+# Doit s'exécuter avant l'étape 5 pour que les fichiers héritent du chown
+if [ -d "./save/wp-content" ]; then
+    echo "[*] Injection des thèmes, plugins et médias sauvegardés..."
+    docker cp ./save/wp-content/themes wordpress:/var/www/html/wp-content/
+    docker cp ./save/wp-content/plugins wordpress:/var/www/html/wp-content/
+    [ -d "./save/wp-content/uploads" ] && docker cp ./save/wp-content/uploads wordpress:/var/www/html/wp-content/
+fi
+
+# 5. Correction dynamique des permissions (post-boot et post-import)
 echo "[*] Application des ACL internes (www-data)..."
 docker exec -it wordpress chown -R www-data:www-data /var/www/html
 docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
 docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
 
-# 5. Healthcheck MariaDB
+# 6. Healthcheck MariaDB
 echo -n "[*] Attente de MariaDB..."
 until docker exec mariadb mariadb-admin ping -h localhost --silent; do
     echo -n "."

@@ -6,30 +6,36 @@ FILE="$SAVE_DIR/init.sql"
 # Format : YYYY-MM-DD_HH-MM-SS
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S") 
 
-# Création du dossier si inexistant (évite une erreur de redirection)
-mkdir -p "$SAVE_DIR"
+# Création des dossiers si inexistants
+mkdir -p "$SAVE_DIR/wp-content"
 
-# 1. Rotation de l'ancienne sauvegarde
-# Si le fichier init.sql existe, on le renomme avec le timestamp actuel
+# 1. Sauvegarde des fichiers WordPress (Thèmes, Plugins, Uploads)
+# Doit être fait avant l'arrêt des conteneurs
+echo "[*] Exportation des thèmes, plugins et médias..."
+docker cp wordpress:/var/www/html/wp-content/themes "$SAVE_DIR/wp-content/"
+docker cp wordpress:/var/www/html/wp-content/plugins "$SAVE_DIR/wp-content/"
+# On ajoute un catch d'erreur silencieux au cas où le dossier uploads n'existe pas encore
+docker cp wordpress:/var/www/html/wp-content/uploads "$SAVE_DIR/wp-content/" 2>/dev/null || true
+# Forçage des droits pour Git sur l'hôte physique
+sudo chown -R $USER:$USER "$SAVE_DIR/wp-content"
+
+# 2. Rotation de l'ancienne sauvegarde SQL
 if [ -f "$FILE" ]; then
     mv "$FILE" "$SAVE_DIR/init-$TIMESTAMP.sql"
 fi
 
-# 2. Exécution du dump
-# Sécurité : On passe le mot de passe via une variable d'environnement pour éviter qu'il n'apparaisse dans les logs/processus
-# Note : Pour MariaDB, on utilise MARIADB_PWD (ou MYSQL_PWD)
+# 3. Exécution du dump SQL
+echo "[*] Dump de la base de données..."
 if docker exec mariadb mariadb-dump -u mathias -proot sae > "$FILE"; then
     echo "[+] Dump réussi : $FILE"
 else
     echo "[-] Erreur lors du dump. Restauration de l'ancienne sauvegarde..."
-    # Rollback de base en cas de crash du conteneur pendant le dump
     [ -f "$SAVE_DIR/init-$TIMESTAMP.sql" ] && mv "$SAVE_DIR/init-$TIMESTAMP.sql" "$FILE"
     exit 1
 fi
 
-# 3. Nettoyage et arrêt
-# Le flag -f (force) est obligatoire dans un script pour bypasser le prompt de confirmation
+# 4. Nettoyage et arrêt
+echo "[*] Nettoyage réseau et arrêt des conteneurs..."
 docker network prune -f 
-
-# Arrêt des conteneurs
 docker compose stop
+echo "[+] Sauvegarde et arrêt terminés avec succès."
