@@ -54,6 +54,6 @@ done
 echo -e "\n${GREEN}[+] MariaDB est prêt.${NC}"
 
 echo -e "${GREEN}[!] Déploiement terminé avec succès.${NC}"
-echo "Wordpress: http://localhost:80"
+echo "Wordpress: http://192.168.100.10:80"
 echo "phpMyAdmin: http://localhost:8080"
-echo "Wordpress Admin : http://0.0.0.0:80/wp-admin/"
+echo "Wordpress Admin : http://192.168.100.10:80/wp-admin/"
