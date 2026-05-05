@@ -47,7 +47,23 @@ services:
       - mariadb
     networks:
       - sae_network
-
+  symfony:
+    build:
+      context: .
+      dockerfile: Dockerfile.symfony
+    container_name: symfony
+    restart: unless-stopped
+    ports:
+      - "8001:80"
+    environment:
+      # Format attendu par Doctrine pour se connecter à MariaDB
+      DATABASE_URL: "mysql://mathias:root@mariadb:3306/sae?serverVersion=mariadb-10.11.2&charset=utf8mb4"
+    volumes:
+      - ./symfony_app:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - sae_network
 networks:
   sae_network:
     driver: bridge

@@ -1,0 +1,26 @@
+FROM php:8.3-apache
+
+# Installation des dépendances système et extensions PHP requises par Symfony
+RUN apt-get update && apt-get install -y git unzip libicu-dev libzip-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl pdo pdo_mysql zip
+
+# Fix de la sécurité Git (Dubious ownership)
+RUN git config --global --add safe.directory /var/www/html
+
+# Activation du module rewrite d'Apache
+RUN a2enmod rewrite
+
+# Modification du DocumentRoot pour pointer sur /public
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# CONFIGURATION CRITIQUE : Rediriger toutes les routes inconnues vers index.php
+RUN sed -i '/<\/VirtualHost>/i \ \tFallbackResource /index.php' /etc/apache2/sites-available/000-default.conf
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
+# Installation de Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
