@@ -3,19 +3,17 @@
 # Définition des variables
 SAVE_DIR="./save"
 FILE="$SAVE_DIR/init.sql"
-# Format : YYYY-MM-DD_HH-MM-SS
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S") 
 
 # Création des dossiers si inexistants
 mkdir -p "$SAVE_DIR/wp-content"
 
 # 1. Sauvegarde des fichiers WordPress (Thèmes, Plugins, Uploads)
-# Doit être fait avant l'arrêt des conteneurs
 echo "[*] Exportation des thèmes, plugins et médias..."
 docker cp wordpress:/var/www/html/wp-content/themes "$SAVE_DIR/wp-content/"
 docker cp wordpress:/var/www/html/wp-content/plugins "$SAVE_DIR/wp-content/"
-# On ajoute un catch d'erreur silencieux au cas où le dossier uploads n'existe pas encore
 docker cp wordpress:/var/www/html/wp-content/uploads "$SAVE_DIR/wp-content/" 2>/dev/null || true
+
 # Forçage des droits pour Git sur l'hôte physique
 sudo chown -R $USER:$USER "$SAVE_DIR/wp-content"
 
@@ -34,8 +32,10 @@ else
     exit 1
 fi
 
-# 4. Nettoyage et arrêt
-echo "[*] Nettoyage réseau et arrêt des conteneurs..."
-docker network prune -f 
-docker compose stop
+# 4. Nettoyage et arrêt (Approche statique robuste)
+echo "[*] Nettoyage réseau et destruction des conteneurs..."
+# Le 'down' remplace avantageusement le 'stop' + 'prune'
+# Il détruit les conteneurs et supprime proprement le réseau associé
+docker compose -f docker-compose.yml down
+
 echo "[+] Sauvegarde et arrêt terminés avec succès."
