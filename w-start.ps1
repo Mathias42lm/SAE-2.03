@@ -24,40 +24,51 @@ Write-Host "[*] Démarrage des conteneurs..." -ForegroundColor Cyan
 docker compose up -d --build --remove-orphans
 if ($LASTEXITCODE -ne 0) { Write-Host "[-] Erreur Docker." -ForegroundColor Red; exit 1 }
 
-# 3. Injection forcée des Thèmes et Plugins (DEPUIS ./save/)
+# 3. Healthcheck et attente de l'extraction Core WordPress
+Write-Host -NoNewline "[*] Attente de MariaDB..." -ForegroundColor Cyan
+while ($true) {
+    docker exec mariadb mariadb-admin ping -h localhost -umathias -proot --silent 2>$null
+    if ($LASTEXITCODE -eq 0) { break }
+    Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
+}
+Write-Host "`n[+] MariaDB est prêt." -ForegroundColor Green
+
+Write-Host -NoNewline "[*] Attente de l'extraction du core WordPress..." -ForegroundColor Cyan
+# Boucle d'attente : on vérifie que le dossier themes existe bien avant de copier
+while ($true) {
+    docker exec wordpress ls /var/www/html/wp-content/themes 2>$null
+    if ($LASTEXITCODE -eq 0) { break }
+    Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
+}
+Write-Host "`n[+] Arborescence WordPress prête." -ForegroundColor Green
+
+# 4. Injection forcée des Thèmes et Plugins (DEPUIS ./save/)
 Write-Host "[*] Injection des assets de sauvegarde vers Docker..." -ForegroundColor Cyan
 if (Test-Path "./save/wp-content") {
+    
+    # Utilisation de la syntaxe '/.' pour copier le contenu entier d'un coup
     if (Test-Path "./save/wp-content/themes") {
-        Get-ChildItem -Directory "./save/wp-content/themes" | ForEach-Object {
-            docker cp $_.FullName wordpress:/var/www/html/wp-content/themes/
-        }
+        Write-Host "    -> Copie des thèmes..."
+        docker cp "./save/wp-content/themes/." "wordpress:/var/www/html/wp-content/themes/"
     }
+    
     if (Test-Path "./save/wp-content/plugins") {
-        Get-ChildItem -Directory "./save/wp-content/plugins" | ForEach-Object {
-            docker cp $_.FullName wordpress:/var/www/html/wp-content/plugins/
-        }
+        Write-Host "    -> Copie des plugins..."
+        docker cp "./save/wp-content/plugins/." "wordpress:/var/www/html/wp-content/plugins/"
     }
 }
 
-# 4. Correction des permissions et ACL (WordPress)
+# 5. Correction des permissions et ACL (WordPress)
 Write-Host "[*] Application des permissions (www-data)..." -ForegroundColor Cyan
 docker exec wordpress chown -R www-data:www-data /var/www/html
 docker exec wordpress find /var/www/html -type d -exec chmod 755 {} ";"
 docker exec wordpress find /var/www/html -type f -exec chmod 644 {} ";"
 
-# 5. Initialisation Symfony (Correction du flag -n)
+# 6. Initialisation Symfony (Correction du flag -n)
 if (docker ps -q -f name=symfony) {
     Write-Host "[*] Setup Symfony..." -ForegroundColor Cyan
     docker exec symfony /bin/sh -c "composer install --no-interaction --optimize-autoloader"
     docker exec symfony chown -R www-data:www-data /var/www/html/var
-}
-
-# 6. Healthcheck MariaDB
-Write-Host -NoNewline "[*] Attente MariaDB..." -ForegroundColor Cyan
-while ($true) {
-    docker exec mariadb mariadb-admin ping -h localhost -umathias -proot --silent 2>$null
-    if ($LASTEXITCODE -eq 0) { break }
-    Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
 }
 
 # 7. Résumé des accès (Architecture Reverse Proxy)
