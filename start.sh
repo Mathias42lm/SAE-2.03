@@ -77,9 +77,12 @@ until docker exec mariadb mariadb-admin ping -h localhost -umathias -proot --sil
 done
 echo -e "\n${GREEN}[+] MariaDB est prêt.${NC}"
 
-echo -e "${GREEN}[!] Déploiement terminé avec succès.${NC}"
-echo "Wordpress       : http://192.168.100.10:80"
-echo "Wordpress https : https://192.168.100.10:80"
-echo "Wordpress Admin : http://192.168.100.10:80/wp-admin/"
-echo "Symfony App     : http://localhost:8001"
-echo "phpMyAdmin      : http://localhost:8080"
+# 7. Résumé des accès (Architecture Reverse Proxy)
+echo -e "\n\033[0;32m[!] Déploiement terminé.\033[0m"
+echo "-------------------------------------------------------"
+echo -e "WordPress (HTTP)  : \033[0;36mhttp://localhost\033[0m"
+echo -e "WordPress (HTTPS) : \033[0;36mhttps://localhost\033[0m"
+echo -e "Admin WordPress   : \033[0;36mhttp://localhost/wp-admin/\033[0m"
+echo -e "phpMyAdmin        : \033[0;33mhttp://localhost/phpmyadmin/\033[0m"
+echo -e "Symfony App       : \033[0;35mhttp://localhost/symfony/\033[0m"
+echo "-------------------------------------------------------"

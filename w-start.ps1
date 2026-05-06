@@ -60,12 +60,13 @@ while ($true) {
     Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
 }
 
-# 7. Résumé des accès
+# 7. Résumé des accès (Architecture Reverse Proxy)
 Write-Host "`n[!] Déploiement terminé." -ForegroundColor Green
-Write-Host "WordPress (HTTP)  : http://$IP_LOCALE"
-Write-Host "WordPress (HTTPS) : https://$IP_LOCALE"
-Write-Host "phpMyAdmin        : http://localhost:8080"
-Write-Host "Symfony App       : http://localhost:8001"
-
-Write-Host "`n[?] Liste des thèmes injectés :" -ForegroundColor Cyan
-docker exec wordpress ls /var/www/html/wp-content/themes
+Write-Host "-------------------------------------------------------"
+Write-Host "WordPress (HTTP)  : http://localhost" -ForegroundColor Cyan
+Write-Host "WordPress (HTTPS) : https://localhost" -ForegroundColor Cyan
+Write-Host "Admin WordPress   : http://localhost/wp-admin/" -ForegroundColor Cyan
+Write-Host "phpMyAdmin        : http://localhost/phpmyadmin/" -ForegroundColor Yellow
+Write-Host "Symfony App       : http://localhost/symfony/" -ForegroundColor Magenta
+Write-Host "-------------------------------------------------------"
+Write-Host "Note : Tu peux aussi remplacer 'localhost' par '$IP_LOCALE'"
