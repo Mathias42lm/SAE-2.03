@@ -38,14 +38,17 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mariadb
-    ports:
-      - "8080:80"
+      # Indique à phpMyAdmin son URI derrière le proxy
+      PMA_ABSOLUTE_URI: http://192.168.100.10/phpmyadmin/ 
+    # Port 8080 supprimé : Nginx gèrera le routage
     depends_on:
       - mariadb
     networks:
       - sae_network
+
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
@@ -54,19 +57,20 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
     networks:
       sae_network:
-        ipv4_address: 192.168.100.10 # L'IP statique en 192.168.1.x
+        ipv4_address: 192.168.100.10
     depends_on:
       - wordpress
+      - phpmyadmin
+      - symfony
+
   symfony:
     build:
       context: .
       dockerfile: Dockerfile.symfony
     container_name: symfony
     restart: unless-stopped
-    ports:
-      - "8001:80"
+    # Port 8001 supprimé : Nginx gèrera le routage
     environment:
-      # Format attendu par Doctrine pour se connecter à MariaDB
       DATABASE_URL: "mysql://mathias:root@mariadb:3306/sae?serverVersion=mariadb-10.11.2&charset=utf8mb4"
     volumes:
       - ./symfony_app:/var/www/html
@@ -74,9 +78,10 @@ services:
       - mariadb
     networks:
       - sae_network
+
 networks:
   sae_network:
     driver: bridge
     ipam:
       config:
-        - subnet: 192.168.100.0/24 # Le sous-réseau correspondant
+        - subnet: 192.168.100.0/24
