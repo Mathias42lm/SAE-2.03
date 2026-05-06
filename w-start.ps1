@@ -4,80 +4,91 @@ $IP_LOCALE = "192.168.100.10"
 $SYMFONY_DIR = "./symfony_app"
 $SYMFONY_REPO_URL = "https://github.com/Mathias42lm/EportfolioMathias.git"
 
-Write-Host "[*] Déploiement SAE-2.03 - Mode Injection Directe" -ForegroundColor Green
+Write-Host "[*] Déploiement SAE-2.03 - Script Master" -ForegroundColor Green
 
-# 0. Gestion Git Symfony
+# 1. Récupération / Pull du E-Portfolio
+Write-Host "[*] Etape 1 : Récupération du code Symfony..." -ForegroundColor Cyan
 if (Test-Path "$SYMFONY_DIR\.git") {
     git -C $SYMFONY_DIR pull
 } else {
     git clone $SYMFONY_REPO_URL $SYMFONY_DIR
 }
 
-# 1. Préparation des volumes et nettoyage
+# 2. Nettoyage préventif et préparation des volumes
+Write-Host "[*] Etape 2 : Préparation des volumes hôtes..." -ForegroundColor Cyan
 if (Test-Path "./init.sql" -PathType Container) { Remove-Item -Recurse -Force "./init.sql" }
 foreach ($dir in @("./db", "./wordpress", "./nginx/ssl")) {
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 }
 
-# 2. Lancement de la stack
-Write-Host "[*] Démarrage des conteneurs..." -ForegroundColor Cyan
+# 3. Démarrage de l'infrastructure Docker
+Write-Host "[*] Etape 3 : Lancement de Docker Compose..." -ForegroundColor Cyan
 docker compose up -d --build --remove-orphans
-if ($LASTEXITCODE -ne 0) { Write-Host "[-] Erreur Docker." -ForegroundColor Red; exit 1 }
+if ($LASTEXITCODE -ne 0) { Write-Host "[-] Erreur critique Docker." -ForegroundColor Red; exit 1 }
 
-# 3. Healthcheck et attente de l'extraction Core WordPress
-Write-Host -NoNewline "[*] Attente de MariaDB..." -ForegroundColor Cyan
+# 4. Blocage Anti-Race Condition (Attente des processus internes)
+Write-Host -NoNewline "[*] Etape 4 : Attente des services (MariaDB & Core WordPress)..." -ForegroundColor Cyan
 while ($true) {
+    # Test ping MariaDB
     docker exec mariadb mariadb-admin ping -h localhost -umathias -proot --silent 2>$null
     if ($LASTEXITCODE -eq 0) { break }
     Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
 }
-Write-Host "`n[+] MariaDB est prêt." -ForegroundColor Green
-
-Write-Host -NoNewline "[*] Attente de l'extraction du core WordPress..." -ForegroundColor Cyan
-# Boucle d'attente : on vérifie que le dossier themes existe bien avant de copier
 while ($true) {
+    # Test extraction WordPress (on attend que le dossier par défaut existe)
     docker exec wordpress ls /var/www/html/wp-content/themes 2>$null
     if ($LASTEXITCODE -eq 0) { break }
     Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
 }
-Write-Host "`n[+] Arborescence WordPress prête." -ForegroundColor Green
+Write-Host "`n[+] Services prêts à recevoir les données." -ForegroundColor Green
 
-# 4. Injection forcée des Thèmes et Plugins (DEPUIS ./save/)
-Write-Host "[*] Injection des assets de sauvegarde vers Docker..." -ForegroundColor Cyan
+# 5. Injection directe de la Base de Données (Init.sql)
+Write-Host "[*] Etape 5 : Restauration de la base de données..." -ForegroundColor Cyan
+if (Test-Path "./save/init.sql") {
+    # Utilisation de cmd.exe pour bypasser les problèmes d'encodage de pipe (<) sous PowerShell
+    cmd.exe /c "docker exec -i mariadb mariadb -umathias -proot sae < .\save\init.sql"
+    if ($LASTEXITCODE -eq 0) { Write-Host "    -> Base de données importée." }
+} else {
+    Write-Host "    [!] Fichier ./save/init.sql introuvable. Skip." -ForegroundColor Yellow
+}
+
+# 6. Injection des assets WordPress (Thèmes, Plugins, Uploads)
+Write-Host "[*] Etape 6 : Injection des assets WordPress..." -ForegroundColor Cyan
 if (Test-Path "./save/wp-content") {
-    
-    # Utilisation de la syntaxe '/.' pour copier le contenu entier d'un coup
-    if (Test-Path "./save/wp-content/themes") {
-        Write-Host "    -> Copie des thèmes..."
-        docker cp "./save/wp-content/themes/." "wordpress:/var/www/html/wp-content/themes/"
-    }
-    
-    if (Test-Path "./save/wp-content/plugins") {
-        Write-Host "    -> Copie des plugins..."
-        docker cp "./save/wp-content/plugins/." "wordpress:/var/www/html/wp-content/plugins/"
+    foreach ($asset in @("themes", "plugins", "uploads")) {
+        if (Test-Path "./save/wp-content/$asset") {
+            Write-Host "    -> Copie de $asset..."
+            # Le '/.' copie le contenu total du dossier pour éviter les conflits d'arborescence
+            docker cp "./save/wp-content/$asset/." "wordpress:/var/www/html/wp-content/$asset/"
+        }
     }
 }
 
-# 5. Correction des permissions et ACL (WordPress)
-Write-Host "[*] Application des permissions (www-data)..." -ForegroundColor Cyan
+# 7. Application des permissions sur le Web (WordPress)
+Write-Host "[*] Etape 7 : Application des permissions (www-data)..." -ForegroundColor Cyan
 docker exec wordpress chown -R www-data:www-data /var/www/html
 docker exec wordpress find /var/www/html -type d -exec chmod 755 {} ";"
 docker exec wordpress find /var/www/html -type f -exec chmod 644 {} ";"
 
-# 6. Initialisation Symfony (Correction du flag -n)
+# 8. Initialisation de Symfony
+Write-Host "[*] Etape 8 : Setup du Web Symfony..." -ForegroundColor Cyan
 if (docker ps -q -f name=symfony) {
-    Write-Host "[*] Setup Symfony..." -ForegroundColor Cyan
+    # /bin/sh -c évite l'erreur de flag avec PowerShell
     docker exec symfony /bin/sh -c "composer install --no-interaction --optimize-autoloader"
+    # Permissions sur les dossiers de cache/log Symfony
     docker exec symfony chown -R www-data:www-data /var/www/html/var
+    Write-Host "    -> Dépendances et permissions Symfony configurées."
+} else {
+    Write-Host "    [-] Conteneur Symfony inactif." -ForegroundColor Red
 }
 
-# 7. Résumé des accès (Architecture Reverse Proxy)
-Write-Host "`n[!] Déploiement terminé." -ForegroundColor Green
+# 9. Affichage des accès
+Write-Host "`n[!] Déploiement terminé avec succès." -ForegroundColor Green
 Write-Host "-------------------------------------------------------"
-Write-Host "WordPress (HTTP)  : http://localhost" -ForegroundColor Cyan
-Write-Host "WordPress (HTTPS) : https://localhost" -ForegroundColor Cyan
-Write-Host "Admin WordPress   : http://localhost/wp-admin/" -ForegroundColor Cyan
-Write-Host "phpMyAdmin        : http://localhost/phpmyadmin/" -ForegroundColor Yellow
-Write-Host "Symfony App       : http://localhost/symfony/" -ForegroundColor Magenta
+Write-Host "=> WordPress (HTTP)  : http://$IP_LOCALE" -ForegroundColor Cyan
+Write-Host "=> WordPress (HTTPS) : https://$IP_LOCALE" -ForegroundColor Cyan
+Write-Host "=> Admin WordPress   : http://$IP_LOCALE/wp-admin/" -ForegroundColor Cyan
+Write-Host "=> Symfony App       : http://$IP_LOCALE/symfony/" -ForegroundColor Magenta
+Write-Host "=> phpMyAdmin        : http://$IP_LOCALE/phpmyadmin/" -ForegroundColor Yellow
 Write-Host "-------------------------------------------------------"
-Write-Host "Note : Tu peux aussi remplacer 'localhost' par '$IP_LOCALE'"
+Write-Host "Note : Les accès sont également fonctionnels sur 'localhost'"
