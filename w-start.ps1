@@ -1,70 +1,71 @@
 # Configuration de l'encodage
 $OutputEncoding = [System.Text.Encoding]::UTF8
-
-# Couleurs
-$GREEN = "Green"
-$RED = "Red"
-$CYAN = "Cyan"
-
-# Variables
-$SYMFONY_REPO_URL = "https://github.com/Mathias42lm/EportfolioMathias.git"
+$IP_LOCALE = "192.168.100.10"
 $SYMFONY_DIR = "./symfony_app"
-$IP_FIXE = "192.168.100.10"
+$SYMFONY_REPO_URL = "https://github.com/Mathias42lm/EportfolioMathias.git"
 
-Write-Host "[*] Initialisation du déploiement SAE-2.03..." -ForegroundColor $GREEN
+Write-Host "[*] Déploiement SAE-2.03 - Mode Injection Directe" -ForegroundColor Green
 
-# 0. Préparation Git
+# 0. Gestion Git Symfony
 if (Test-Path "$SYMFONY_DIR\.git") {
-    Write-Host "[*] Mise à jour du dépôt Symfony..." -ForegroundColor $CYAN
     git -C $SYMFONY_DIR pull
 } else {
-    Write-Host "[*] Clonage du dépôt Symfony..." -ForegroundColor $CYAN
     git clone $SYMFONY_REPO_URL $SYMFONY_DIR
 }
 
-# 1. Nettoyage et Dossiers
-if (Test-Path "./init.sql" -PathType Container) {
-    Remove-Item -Recurse -Force "./init.sql"
-    New-Item -ItemType File "./init.sql" | Out-Null
-}
-
+# 1. Préparation des volumes et nettoyage
+if (Test-Path "./init.sql" -PathType Container) { Remove-Item -Recurse -Force "./init.sql" }
 foreach ($dir in @("./db", "./wordpress", "./nginx/ssl")) {
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 }
 
-# 2. Lancement Docker
-Write-Host "[*] Lancement de Docker Compose..." -ForegroundColor $CYAN
+# 2. Lancement de la stack
+Write-Host "[*] Démarrage des conteneurs..." -ForegroundColor Cyan
 docker compose up -d --build --remove-orphans
+if ($LASTEXITCODE -ne 0) { Write-Host "[-] Erreur Docker." -ForegroundColor Red; exit 1 }
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[-] Erreur Docker Compose." -ForegroundColor $RED
-    exit 1
+# 3. Injection forcée des Thèmes et Plugins (DEPUIS ./save/)
+Write-Host "[*] Injection des assets de sauvegarde vers Docker..." -ForegroundColor Cyan
+if (Test-Path "./save/wp-content") {
+    if (Test-Path "./save/wp-content/themes") {
+        Get-ChildItem -Directory "./save/wp-content/themes" | ForEach-Object {
+            docker cp $_.FullName wordpress:/var/www/html/wp-content/themes/
+        }
+    }
+    if (Test-Path "./save/wp-content/plugins") {
+        Get-ChildItem -Directory "./save/wp-content/plugins" | ForEach-Object {
+            docker cp $_.FullName wordpress:/var/www/html/wp-content/plugins/
+        }
+    }
 }
 
-# 3. Permissions WordPress
-Write-Host "[*] Configuration des permissions WordPress..." -ForegroundColor $CYAN
+# 4. Correction des permissions et ACL (WordPress)
+Write-Host "[*] Application des permissions (www-data)..." -ForegroundColor Cyan
 docker exec wordpress chown -R www-data:www-data /var/www/html
 docker exec wordpress find /var/www/html -type d -exec chmod 755 {} ";"
 docker exec wordpress find /var/www/html -type f -exec chmod 644 {} ";"
 
-# 4. Initialisation Symfony (CORRECTION DU FLAG -n)
-Write-Host "[*] Installation des dépendances Symfony..." -ForegroundColor $CYAN
+# 5. Initialisation Symfony (Correction du flag -n)
 if (docker ps -q -f name=symfony) {
-    # Utilisation de --% pour empêcher PowerShell d'analyser les tirets suivants
-    # OU utilisation d'une chaîne de caractères via /bin/sh (méthode la plus robuste)
+    Write-Host "[*] Setup Symfony..." -ForegroundColor Cyan
     docker exec symfony /bin/sh -c "composer install --no-interaction --optimize-autoloader"
     docker exec symfony chown -R www-data:www-data /var/www/html/var
 }
 
-# 5. Healthcheck MariaDB
-Write-Host -NoNewline "[*] Attente de MariaDB..." -ForegroundColor $CYAN
+# 6. Healthcheck MariaDB
+Write-Host -NoNewline "[*] Attente MariaDB..." -ForegroundColor Cyan
 while ($true) {
     docker exec mariadb mariadb-admin ping -h localhost -umathias -proot --silent 2>$null
     if ($LASTEXITCODE -eq 0) { break }
-    Write-Host -NoNewline "."
-    Start-Sleep -Seconds 2
+    Write-Host -NoNewline "." ; Start-Sleep -Seconds 2
 }
 
-Write-Host "`n[!] Déploiement terminé avec succès." -ForegroundColor $GREEN
-Write-Host "Accès HTTP  : http://$IP_FIXE"
-Write-Host "Accès HTTPS : https://$IP_FIXE"
+# 7. Résumé des accès
+Write-Host "`n[!] Déploiement terminé." -ForegroundColor Green
+Write-Host "WordPress (HTTP)  : http://$IP_LOCALE"
+Write-Host "WordPress (HTTPS) : https://$IP_LOCALE"
+Write-Host "phpMyAdmin        : http://localhost:8080"
+Write-Host "Symfony App       : http://localhost:8001"
+
+Write-Host "`n[?] Liste des thèmes injectés :" -ForegroundColor Cyan
+docker exec wordpress ls /var/www/html/wp-content/themes
