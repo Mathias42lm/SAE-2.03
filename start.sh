@@ -55,9 +55,9 @@ fi
 
 # 5. Correction dynamique des permissions WordPress
 #echo "[*] Application des ACL internes (WordPress)..."
-#docker exec -it wordpress chown -R www-data:www-data /var/www/html
-#docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
-#docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
+docker exec -it wordpress chown -R www-data:www-data /var/www/html
+docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
+docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
 
 # 6. Initialisation et permissions Symfony
 echo "[*] Installation des dépendances Symfony (Composer)..."
