@@ -54,10 +54,10 @@ if [ -d "./save/wp-content" ]; then
 fi
 
 # 5. Correction dynamique des permissions WordPress
-echo "[*] Application des ACL internes (WordPress)..."
-docker exec -it wordpress chown -R www-data:www-data /var/www/html
-docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
-docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
+#echo "[*] Application des ACL internes (WordPress)..."
+#docker exec -it wordpress chown -R www-data:www-data /var/www/html
+#docker exec -it wordpress find /var/www/html -type d -exec chmod 755 {} \;
+#docker exec -it wordpress find /var/www/html -type f -exec chmod 644 {} \;
 
 # 6. Initialisation et permissions Symfony
 echo "[*] Installation des dépendances Symfony (Composer)..."
@@ -79,6 +79,7 @@ echo -e "\n${GREEN}[+] MariaDB est prêt.${NC}"
 
 echo -e "${GREEN}[!] Déploiement terminé avec succès.${NC}"
 echo "Wordpress       : http://192.168.100.10:80"
+echo "Wordpress https : https://192.168.100.10:80"
 echo "Wordpress Admin : http://192.168.100.10:80/wp-admin/"
 echo "Symfony App     : http://localhost:8001"
 echo "phpMyAdmin      : http://localhost:8080"

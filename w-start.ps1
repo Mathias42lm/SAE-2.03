@@ -95,5 +95,6 @@ Write-Host "`n[+] MariaDB est prêt." -ForegroundColor $GREEN
 Write-Host "[!] Déploiement terminé avec succès." -ForegroundColor $GREEN
 Write-Host "Wordpress       : http://192.168.100.10:80"
 Write-Host "Wordpress Admin : http://192.168.100.10:80/wp-admin/"
+Write-Host "Wordpress https : https://192.168.100.10:80"
 Write-Host "Symfony App     : http://localhost:8001"
 Write-Host "phpMyAdmin      : http://localhost:8080"
