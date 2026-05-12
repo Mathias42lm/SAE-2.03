@@ -1,31 +1,33 @@
 FROM php:8.3-apache
 
-# Installation des dépendances système et extensions PHP (opcache ajouté pour la perf)
-RUN apt-get update && apt-get install -y git unzip libicu-dev libzip-dev \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl pdo pdo_mysql zip opcache
+# 1. Récupération de l'installeur d'extensions pré-compilées (Game Changer pour la vitesse)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Fix de la sécurité Git (Dubious ownership)
-RUN git config --global --add safe.directory /var/www/html
+# 2. Installation des paquets système et extensions PHP en une seule couche
+# Utilisation de --no-install-recommends et nettoyage du cache APT pour réduire la taille/I/O
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    unzip \
+    && install-php-extensions intl pdo_mysql zip opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Activation du module rewrite d'Apache
-RUN a2enmod rewrite
-
-# Modification du DocumentRoot pour pointer sur /public
+# 3. Configuration d'Apache regroupée en une seule exécution
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-# CONFIGURATION CRITIQUE : Création d'une conf propre pour Symfony au lieu de sed multiples
-# Cela garantit que les .htaccess fonctionnent et que les routes sont redirigées vers index.php
-RUN echo "<Directory ${APACHE_DOCUMENT_ROOT}>\n\
+RUN a2enmod rewrite \
+    && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+    && echo "<Directory ${APACHE_DOCUMENT_ROOT}>\n\
     AllowOverride All\n\
     Require all granted\n\
     FallbackResource /index.php\n\
 </Directory>" > /etc/apache2/conf-available/symfony.conf \
     && a2enconf symfony
 
-# Installation de Composer
+# 4. Sécurité Git
+RUN git config --global --add safe.directory /var/www/html
+
+# 5. Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
