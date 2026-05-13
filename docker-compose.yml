@@ -38,9 +38,6 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mariadb
-      # Indique à phpMyAdmin son URI derrière le proxy
-      PMA_ABSOLUTE_URI: http://192.168.100.10/phpmyadmin/ 
-    # Port 8080 supprimé : Nginx gèrera le routage
     depends_on:
       - mariadb
     networks:
