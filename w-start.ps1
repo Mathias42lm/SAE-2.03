@@ -43,8 +43,14 @@ Write-Host "`n[+] Services prêts à recevoir les données." -ForegroundColor Gr
 # 5. Injection directe de la Base de Données (Init.sql)
 Write-Host "[*] Etape 5 : Restauration de la base de données..." -ForegroundColor Cyan
 if (Test-Path "./save/init.sql") {
-    cmd.exe /c "docker exec -i mariadb mariadb -umathias -proot sae < .\save\init.sql"
-    if ($LASTEXITCODE -eq 0) { Write-Host "    -> Base de données importée." }
+    Write-Host "    -> Copie du fichier SQL dans le conteneur..."
+    docker cp ./save/init.sql mariadb:/tmp/init.sql
+    
+    Write-Host "    -> Exécution de l'import (source)..."
+    # Ajout de --skip-ssl et --default-character-set=utf8mb4
+    docker exec mariadb mariadb -umathias -proot --skip-ssl --default-character-set=utf8mb4 -f sae -e "source /tmp/init.sql"
+    
+    if ($LASTEXITCODE -eq 0) { Write-Host "    -> Base de données importée avec succès." }
 } else {
     Write-Host "    [!] Fichier ./save/init.sql introuvable. Skip." -ForegroundColor Yellow
 }
