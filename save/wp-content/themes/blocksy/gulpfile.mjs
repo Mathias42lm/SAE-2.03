@@ -530,7 +530,6 @@ var options = {
 
 	babelAdditionalPlugins: [
 		'babel-plugin-lodash',
-		'@babel/plugin-transform-parameters',
 	],
 
 	modulesToCompileWithBabel: [

@@ -164,6 +164,9 @@ export const mount = (el, { event }) => {
 				button[0].closest('li').remove()
 			} catch (e) {}
 		})
+
+		$(document).trigger('wc_update_cart')
+		$(document.body).trigger('update_checkout')
 	})
 
 	$(document.body).on('click', '.remove_from_cart_button', (e) => {

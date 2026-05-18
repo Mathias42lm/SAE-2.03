@@ -83,6 +83,11 @@ class BlocksyExtensionNewsletterSubscribePreBoot {
 			[
 				'key' => 'klaviyo',
 				'value' => 'Klaviyo',
+			],
+
+			[
+				'key' => 'sendy',
+				'value' => 'Sendy',
 			]
 		];
 

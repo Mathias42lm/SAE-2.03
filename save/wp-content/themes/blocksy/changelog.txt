@@ -1,3 +1,11 @@
+2.1.42: 2026-05-14
+- Improvement: Automatically update checkout page when modifying cart drawer quantity
+- Improvement: Header and footer builder - allow `blocksy:footer:items-config` filter to modify items clone limit
+- Improvement: Improve validation of post meta for unexpected values
+
+2.1.41: 2026-05-07
+- Improvement: General fixes and improvements
+
 2.1.40: 2026-05-01
 - Improvement: Post meta box - correctly listen for meta field changes
 

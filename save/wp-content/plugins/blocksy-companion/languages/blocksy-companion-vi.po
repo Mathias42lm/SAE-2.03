@@ -1261,7 +1261,7 @@ msgstr "Xem thêm thông tin về cách tạo danh sách trong FluentCRM %stại
 
 #: framework/premium/extensions/custom-fonts/dashboard-static/js/AllFonts.js:123
 msgid "Modern Font Stack"
-msgstr "Bộ phông chữ hi��n đại"
+msgstr "Bộ phông chữ hiện đại"
 
 #: framework/premium/extensions/custom-fonts/dashboard-static/js/CustomFonts.js:142
 #: framework/premium/extensions/custom-fonts/dashboard-static/js/Uploader.js:330
@@ -3307,7 +3307,7 @@ msgstr "Thêm điều kiện"
 
 #: static/js/dashboard/screens/DemoInstall/SingleDemo.js:68
 msgid "Upgrade to the agency plan and get instant access to this starter site and many other features."
-msgstr "Nâng cấp lên gói đại lý và có quyền truy cập ngay vào mẫu web bắt đầu này cùng nhiều tính năng khác."
+msgstr "Nâng cấp lên g��i đại lý và có quyền truy cập ngay vào mẫu web bắt đầu này cùng nhiều tính năng khác."
 
 #: static/js/dashboard/screens/Extensions/CurrentExtension.js:316
 msgid "Documentation"
@@ -3518,7 +3518,7 @@ msgstr "Bộ lọc cửa hàng"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/index.js:11
 msgid "Widget for filtering the WooCommerce products loop by category, attribute or brand."
-msgstr "Tiện ích để lọc vòng lặp sản phẩm WooCommerce theo danh mục, thuộc tính hoặc thương hiệu."
+msgstr "Tiện ích để lọc vòng lặp sản phẩm WooCommerce theo danh mục, thuộc tính ho���c thương hiệu."
 
 #: framework/premium/static/js/blocks/ContentBlock.js:27
 msgid "Insert a specific Content Block anywhere on the site."
@@ -4361,7 +4361,7 @@ msgstr "Ưu Tiên"
 
 #: framework/premium/extensions/woocommerce-extra/features/cart-page/options.php:5
 msgid "Coupon Form"
-msgstr "Biểu mẫu mã giảm gi��"
+msgstr "Biểu mẫu mã giảm giá"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/feature.php:138
 msgid "AJAX Filtering"
@@ -4377,7 +4377,7 @@ msgstr "So sánh sản phẩm"
 
 #: framework/premium/extensions/woocommerce-extra/features/compare/feature.php:296
 msgid "Close Compare Modal"
-msgstr "Đóng hộp bật lên so sánh"
+msgstr "Đóng hộp b��t lên so sánh"
 
 #: framework/premium/extensions/woocommerce-extra/features/compare/helpers.php:93,
 #: framework/premium/extensions/woocommerce-extra/features/compare/helpers.php:151

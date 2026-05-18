@@ -9737,7 +9737,7 @@ msgstr "Plik"
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/status-filter/index.js:108
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Edit.js:191
 msgid "Inline"
-msgstr "W treści"
+msgstr "W tre��ci"
 
 #: framework/features/google-analytics.php:81
 msgid "Google Analytics v4"

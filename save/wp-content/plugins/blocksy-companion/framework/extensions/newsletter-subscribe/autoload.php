@@ -17,4 +17,5 @@ $autoload = [
 	'EmailOctopusProvider' => 'providers/emailoctopus.php',
 	'FluentCRMProvider' => 'providers/fluent-crm.php',
 	'KlaviyoProvider' => 'providers/klaviyo.php',
+	'SendyProvider' => 'providers/sendy.php',
 ];

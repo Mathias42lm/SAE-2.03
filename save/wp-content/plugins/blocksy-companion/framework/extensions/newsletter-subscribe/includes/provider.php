@@ -61,6 +61,10 @@ class Provider {
 			return new KlaviyoProvider();
 		}
 
+		if ($provider === 'sendy') {
+			return new SendyProvider();
+		}
+
 		return new MailerliteClassicProvider();
 	}
 

@@ -2,7 +2,7 @@ import {
 	createElement,
 	useEffect,
 	useState,
-	Fragment,
+	Fragment
 } from '@wordpress/element'
 
 import classnames from 'classnames'
@@ -24,7 +24,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const { isPro, showNotice, content } = useProExtensionInFree(extension, {
-		strategy: 'pro',
+		strategy: 'pro'
 	})
 
 	useEffect(() => {
@@ -57,7 +57,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 		try {
 			const response = await fetch(ctDashboardLocalizations.ajax_url, {
 				method: 'POST',
-				body,
+				body
 			})
 
 			if (response.status === 200) {
@@ -78,13 +78,23 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 	const providerMap = {
 		mailerlite: 'mailerlite-new',
-		convertkit: 'convertkit-new',
+		convertkit: 'convertkit-new'
 	}
 
 	const transformedProvider =
 		Object.keys(providerMap).find((p) => provider.includes(p)) || provider
 
 	const value = providerMap[transformedProvider] || provider
+
+	const withApiUrl =
+		provider.indexOf('activecampaign') > -1 ||
+		provider.indexOf('sendy') > -1
+
+	const fourColumnsLayout =
+		provider.indexOf('mailerlite') > -1 ||
+		provider === 'activecampaign' ||
+		provider.indexOf('convertkit') > -1 ||
+		provider.indexOf('sendy') > -1
 
 	return (
 		<div
@@ -96,13 +106,11 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 			<div
 				className="ct-newsletter-credentials"
 				data-columns={
-					provider.indexOf('mailerlite') > -1 ||
-					provider === 'activecampaign' ||
-					provider.indexOf('convertkit') > -1
+					fourColumnsLayout
 						? 4
 						: ['mailpoet', 'fluentcrm'].includes(provider)
-						? 2
-						: 3
+							? 2
+							: 3
 				}>
 				<section>
 					<label>{__('Provider', 'blocksy-companion')}</label>
@@ -124,13 +132,13 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 								'Pick Mailing Service',
 								'blocksy-companion'
 							),
-							choices: extension.data.providers,
+							choices: extension.data.providers
 						}}
 						value={value}
 					/>
 				</section>
 
-				{provider.indexOf('activecampaign') > -1 && (
+				{withApiUrl && (
 					<section>
 						<label>{__('API URL', 'blocksy-companion')}</label>
 
@@ -165,14 +173,14 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 								choices: [
 									{
 										key: 'new',
-										value: 'New',
+										value: 'New'
 									},
 
 									{
 										key: 'classic',
-										value: 'Classic',
-									},
-								],
+										value: 'Classic'
+									}
+								]
 							}}
 							value={
 								provider === 'mailerlite-new'
@@ -202,14 +210,14 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 								choices: [
 									{
 										key: 'new',
-										value: 'New (v4)',
+										value: 'New (v4)'
 									},
 
 									{
 										key: 'classic',
-										value: 'Classic (v3)',
-									},
-								],
+										value: 'Classic (v3)'
+									}
+								]
 							}}
 							value={
 								provider === 'convertkit-new'
@@ -270,7 +278,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 							'<a target="_blank" href="https://mailchimp.com/help/about-api-keys/">',
 							'</a>'
-						),
+						)
 					}}
 				/>
 			)}
@@ -290,7 +298,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 								'</a>',
 								'<a target="_blank" href="https://www.mailerlite.com/help/how-to-create-and-use-groups">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -302,7 +310,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 						__html: __(
 							'This provider is used only for testing purposes. It doesnt register any real subscribers.',
 							'blocksy-companion'
-						),
+						)
 					}}
 				/>
 			)}
@@ -320,7 +328,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://developers.klaviyo.com/en/reference/api_overview">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -338,7 +346,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://help.brevo.com/hc/en-us/articles/209467485-Create-and-manage-your-API-keys">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -356,7 +364,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://developers.kit.com/welcome#api-basics">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -374,7 +382,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://developers.activecampaign.com/reference/overview">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -392,7 +400,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://help.campaignmonitor.com/api-keys">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -410,7 +418,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://emailoctopus.com/api-documentation/v2">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -428,7 +436,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://kb.mailpoet.com/article/282-create-a-list">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}
@@ -446,7 +454,7 @@ const EditCredentials = ({ extension, onCredentialsValidated }) => {
 
 								'<a target="_blank" href="https://kb.fluentcrm.com/article/282-create-a-list">',
 								'</a>'
-							),
+							)
 						}}
 					/>
 				)}

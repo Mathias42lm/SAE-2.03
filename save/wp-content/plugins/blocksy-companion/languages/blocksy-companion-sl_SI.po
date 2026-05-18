@@ -271,7 +271,7 @@ msgstr "Delite ideje, pomagajte drugim, postavljajte vprašanja in razpravljajte
 
 #: static/js/dashboard/helpers/SubmitSupport.js:43
 msgid "Join Our Community"
-msgstr "Pridru��ite se naši skupnosti"
+msgstr "Pridružite se naši skupnosti"
 
 #: static/js/dashboard/helpers/SubmitSupport.js:57
 msgid "Video Tutorials"

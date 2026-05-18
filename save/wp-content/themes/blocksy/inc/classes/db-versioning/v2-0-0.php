@@ -19,32 +19,6 @@ class V200 {
 		$values_cleaner->clean_footer();
 
 		$this->cleanup_color_palette_theme_mod();
-
-		$should_migrate_color_palette = apply_filters(
-			'blocksy:db-versioning:v2:should-migrate-color-palette',
-			true
-		);
-
-		if ($should_migrate_color_palette) {
-			$did_migrate = $this->migrate_color_palette();
-
-			wp_cache_flush();
-
-			if ($did_migrate) {
-				return 'RETRY';
-			}
-
-			$r = new \Blocksy\Database\SearchReplace();
-
-			$result = $r->invoke([
-				'old' => 'paletteColor',
-				'new' => 'theme-palette-color-'
-			]);
-
-			if ($result && isset($result['total']) && $result['total'] > 0) {
-				return 'RETRY';
-			}
-		}
 	}
 
 	public function migrate_post_types_extra_features() {
@@ -403,89 +377,6 @@ class V200 {
 		if ($did_update) {
 			set_theme_mod('colorPalette', $colorPalette);
 		}
-	}
-
-	public function migrate_color_palette() {
-		$r = new \Blocksy\Database\SearchReplace();
-
-		$result = $r->invoke([
-			'old' => 'paletteColor',
-			'new' => 'theme-palette-color-'
-		]);
-
-		$did_migrate = false;
-
-		if ($result && isset($result['total']) && $result['total'] > 0) {
-			$did_migrate = true;
-
-			$r->invoke([
-				'old' => 'var(--color)',
-				'new' => 'var(--theme-text-color)',
-				'dry_run' => false
-			]);
-
-			$r->invoke([
-				'old' => 'paletteColor',
-				'new' => 'theme-palette-color-',
-				'dry_run' => false
-			]);
-
-			$r->invoke([
-				'old' => 'buttonInitialColor',
-				'new' => 'theme-button-background-initial-color',
-				'dry_run' => false
-			]);
-		}
-
-		if (function_exists('gspb_GreenShift_plugin_init')) {
-			$greenshift_variables = [
-				'--linkInitialColor' => '--theme-link-initial-color',
-				'--container-width' => '--theme-container-width',
-				'--normal-container-max-width' => '--theme-normal-container-max-width',
-				'--narrow-container-max-width' => '--theme-narrow-container-max-width',
-				'--buttonFontFamily' => '--theme-button-font-family',
-				'--fontFamily' => '--theme-font-family',
-				'--buttonFontSize' => '--theme-button-font-size',
-				'--buttonFontWeight' => '--theme-button-font-weight',
-				'--buttonFontStyle' => '--theme-button-font-style',
-				'--buttonLineHeight' => '--theme-button-line-height',
-				'--buttonLetterSpacing' => '--theme-button-letter-spacing',
-				'--buttonTextTransform' => '--theme-button-text-transform',
-				'--buttonTextDecoration' => '--theme-button-text-decoration',
-				'--buttonTextInitialColor' => '--theme-button-text-initial-color',
-				'--button-border' => '--theme-button-border',
-				'--buttonInitialColor' => '--theme-button-background-initial-color',
-				'--buttonMinHeight' => '--theme-button-min-height',
-				'--buttonBorderRadius' => '--theme-button-border-radius',
-				'--button-padding' => '--theme-button-padding',
-				'--button-border-hover-color' => '--theme-button-border-hover-color',
-				'--buttonTextHoverColor' => '--theme-button-text-hover-color',
-				'--buttonHoverColor' => '--theme-button-background-hover-color'
-			];
-
-			foreach ($greenshift_variables as $old => $new) {
-				$result = $r->invoke([
-					'old' => $old,
-					'new' => $new,
-					'tables' => [
-						_get_meta_table('post')
-					]
-				]);
-
-				if ($result && $result['total'] > 0) {
-					$r->invoke([
-						'old' => $old,
-						'new' => $new,
-						'tables' => [
-							_get_meta_table('post')
-						],
-						'dry_run' => false
-					]);
-				}
-			}
-		}
-
-		return $did_migrate;
 	}
 
 	public function migrate_image_sizes() {

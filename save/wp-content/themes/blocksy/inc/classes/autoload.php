@@ -67,9 +67,7 @@ class ThemeAutoloader {
 
 			'DbVersioning\\DefaultValuesCleaner' => 'inc/classes/db-versioning/utils/db-default-values-cleaner.php',
 
-			'Database\\SearchReplace' => 'inc/classes/db-versioning/utils/db-search-replace.php',
 			'Database\\Utils' => 'inc/classes/db-versioning/utils/db-utils.php',
-			'Database\\SearchReplacer' => 'inc/classes/db-versioning/utils/db-search-replacer.php',
 
 			'FontsManager' => 'inc/css/fonts-manager.php',
 

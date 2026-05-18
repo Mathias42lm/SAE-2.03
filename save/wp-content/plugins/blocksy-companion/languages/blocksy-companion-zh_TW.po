@@ -4155,7 +4155,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:554
 msgid "Widget Area Source"
-msgstr "小工具區域來源"
+msgstr "小工��區域來源"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:562
 msgid "WooCommerce Sidebar"

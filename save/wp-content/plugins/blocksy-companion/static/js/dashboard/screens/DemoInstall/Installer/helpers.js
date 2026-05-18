@@ -9,7 +9,7 @@ export const prepareUrl = (query_string) => {
 	const params = new URLSearchParams({
 		nonce: ctDashboardLocalizations.dashboard_actions_nonce,
 		wp_customize: 'on',
-		...query_string,
+		...query_string
 	})
 
 	return `${ctDashboardLocalizations.ajax_url}?${params.toString()}`
@@ -24,7 +24,7 @@ const performSingleRequest = async (
 	const url = prepareUrl(request.params)
 
 	const headers = {
-		'Content-Type': 'application/json',
+		'Content-Type': 'application/json'
 	}
 
 	if (strategy === 'sse') {
@@ -37,8 +37,8 @@ const performSingleRequest = async (
 		body: JSON.stringify({
 			requestsPayload,
 			...(request.body || {}),
-			...extraBody,
-		}),
+			...extraBody
+		})
 	})
 
 	if (strategy === 'sse') {
@@ -62,7 +62,7 @@ const performSingleRequest = async (
 
 	return {
 		success: true,
-		data: body.data,
+		data: body.data
 	}
 }
 
@@ -102,7 +102,7 @@ const parseSSEResponse = async (response, onStatus) => {
 			} else if (currentEvent === 'complete') {
 				return {
 					success: true,
-					data: data,
+					data: data
 				}
 			} else if (currentEvent === 'error') {
 				throw new Error(data.message)
@@ -175,6 +175,7 @@ export const performRequestWithExponentialBackoff = async (
 ) => {
 	let attempt = 0
 	const label = request.title
+	let lastErrorMessage = null
 
 	// For SSE requests, track safe duration based on successful request times
 	let safeDuration = null
@@ -182,13 +183,15 @@ export const performRequestWithExponentialBackoff = async (
 	while (attempt < maxRetries) {
 		// Run cleanup request before retry attempts (not on first attempt)
 		if (attempt > 0 && request.cleanup) {
-			console.log(`[${label}] Running cleanup before attempt ${attempt + 1}`)
+			console.log(
+				`[${label}] Running cleanup before attempt ${attempt + 1}`
+			)
 
 			try {
 				await performRequestWithExponentialBackoff(
 					{
 						title: `${label} (cleanup)`,
-						params: request.cleanup.params,
+						params: request.cleanup.params
 					},
 					{},
 					{ maxRetries: 3 }
@@ -231,14 +234,19 @@ export const performRequestWithExponentialBackoff = async (
 			)
 		} catch (e) {
 			const duration = Date.now() - startTime
-			console.log(`[${label}] Attempt ${attempt + 1} failed after ${duration}ms: ${e.message}`)
+			console.log(
+				`[${label}] Attempt ${attempt + 1} failed after ${duration}ms: ${e.message}`
+			)
+			lastErrorMessage = e?.message || lastErrorMessage
 
 			// For SSE, calculate safe duration based on how long the request ran before failing
 			// Only calculate once from the first failure
 			if (strategy === 'sse' && safeDuration === null) {
 				// Use 70% of the time it took before failure
 				safeDuration = Math.max(10, Math.floor((duration * 0.7) / 1000))
-				console.log(`[${label}] Calculated safe duration: ${safeDuration}s`)
+				console.log(
+					`[${label}] Calculated safe duration: ${safeDuration}s`
+				)
 			}
 
 			attempt++
@@ -262,7 +270,7 @@ export const performRequestWithExponentialBackoff = async (
 
 			let currentPayload = {
 				...requestsPayload,
-				importer_data: response.data.importer_data,
+				importer_data: response.data.importer_data
 			}
 
 			// Continue chunked import
@@ -283,12 +291,14 @@ export const performRequestWithExponentialBackoff = async (
 					console.log(
 						`[${label}] Chunked import failed: ${e.message}, restarting attempt`
 					)
+					lastErrorMessage = e?.message || lastErrorMessage
 					break
 				}
 
 				// Another timeout - continue chunking
 				if (
-					chunkResponse.data?.status === 'content_import_timeout_reached'
+					chunkResponse.data?.status ===
+					'content_import_timeout_reached'
 				) {
 					console.log(
 						`[${label}] Chunk completed, more content remaining (processed: ${chunkResponse.data.total_processed}/${chunkResponse.data.total_posts})`
@@ -296,7 +306,7 @@ export const performRequestWithExponentialBackoff = async (
 
 					currentPayload = {
 						...currentPayload,
-						importer_data: chunkResponse.data.importer_data,
+						importer_data: chunkResponse.data.importer_data
 					}
 					continue
 				}
@@ -309,8 +319,8 @@ export const performRequestWithExponentialBackoff = async (
 					data: chunkResponse.data,
 					requestsPayload: {
 						...currentPayload,
-						...chunkResponse.data,
-					},
+						...chunkResponse.data
+					}
 				}
 			}
 
@@ -333,17 +343,17 @@ export const performRequestWithExponentialBackoff = async (
 		) {
 			nextPayload = {
 				...requestsPayload,
-				...response.data,
+				...response.data
 			}
 		}
 
 		return {
 			success: true,
 			data: response.data,
-			requestsPayload: nextPayload,
+			requestsPayload: nextPayload
 		}
 	}
 
 	console.log(`[${label}] All ${maxRetries} attempts failed`)
-	throw new Error(GENERIC_MESSAGE)
+	throw new Error(lastErrorMessage || GENERIC_MESSAGE)
 }

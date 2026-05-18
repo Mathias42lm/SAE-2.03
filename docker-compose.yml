@@ -47,10 +47,10 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"  # Ajout pour Symfony
-      - "8081:8081"  # Ajout pour phpMyAdmin
+      - "80:80"      # Pour Http
+      - "443:443"    # Pour Https
+      - "8080:8080"  # Pour Symfony
+      - "8081:8081"  # Pour phpMyAdmin
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro

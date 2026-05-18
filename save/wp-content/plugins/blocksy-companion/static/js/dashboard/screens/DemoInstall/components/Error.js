@@ -24,13 +24,17 @@ const Error = ({ isError }) => {
 
 			<h2>{__("Can't Import Starter Site", 'blocksy-companion')}</h2>
 
-			<p>{isError}</p>
+			<p
+				dangerouslySetInnerHTML={{
+					__html: isError
+				}}
+			/>
 
 			<a
 				href="https://creativethemes.com/blocksy/docs/troubleshooting/starter-site-import-stuck-at-xx/"
 				className="ct-demo-btn"
 				target="_blank">
-				More Information
+				{__('More Information', 'blocksy-companion')}
 			</a>
 		</Fragment>
 	)

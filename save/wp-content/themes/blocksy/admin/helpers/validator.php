@@ -21,6 +21,11 @@ if (! function_exists('blocksy_is_value_suspicious')) {
 
 		$value = trim($value);
 
+		// Null bytes can be used to bypass security checks
+		if (strpos($value, "\0") !== false) {
+			return true;
+		}
+
 		// Characters that could enable XSS or CSS injection
 		$dangerous = ['<', '>'];
 
@@ -28,6 +33,11 @@ if (! function_exists('blocksy_is_value_suspicious')) {
 			if (strpos($value, $char) !== false) {
 				return true;
 			}
+		}
+
+		// Block serialized PHP object strings to prevent Object Injection
+		if (is_serialized($value)) {
+			return true;
 		}
 
 		return false;

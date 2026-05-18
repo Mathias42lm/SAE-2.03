@@ -182,7 +182,7 @@ msgstr "Детальну інформацію про те, як згенерув
 
 #: framework/premium/extensions/white-label/dashboard-static/js/AdvancedTab.js:149
 msgid "White Label Extension"
-msgstr "Ро��ширення White Label"
+msgstr "Роз��ирення White Label"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/AdvancedTab.js:161
 msgid "Please note that disabling this option will hide the white-label extension. To restore it, press the SHIFT key while clicking the dashboard logo."
@@ -206,7 +206,7 @@ msgstr "Вкладка «Журнал змін»"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/AdvancedTab.js:41
 msgid "Extension Documentation Link"
-msgstr "Посилання н�� документацію розширення"
+msgstr "Посилання на документацію розширення"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/AdvancedTab.js:46
 msgid "Extension Video Link"
@@ -494,7 +494,7 @@ msgstr "Щоб спростити редагування та збереженн
 #. translators: %s is the default user role.
 #: framework/features/demo-install/wp-importer.php:355
 msgid "If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary."
-msgstr "Якщо в WordPress б��де створено нового користувача, новий пароль буде згенеровано випадковим чином, а роль нового користувача буде встановлено як %s. Потрібно буде вручну змінити дані нового користувача."
+msgstr "Якщо в WordPress буде створено нового користува��а, новий пароль буде згенеровано випадковим чином, а роль нового користувача буде встановлено як %s. Потрібно буде вручну змінити дані нового користувача."
 
 #: framework/features/demo-install/wp-importer.php:371
 msgid "Import Attachments"
@@ -610,7 +610,7 @@ msgstr "Імпорт WordPress"
 #. translators: %s is the new version number.
 #: framework/features/demo-install/wp-importer.php:1468
 msgid "A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files."
-msgstr "Доступна нова версія цього імпортера. Оновіт�� його до версії %s, щоб забезпечити сумісність з новими файлами експорту."
+msgstr "Доступна нова версія цього імпортера. Оновіть його до версії %s, щоб забезпе��ити сумісність з новими файлами експорту."
 
 #: framework/features/demo-install/wp-importer.php:1489
 msgid "Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site."
@@ -628,7 +628,7 @@ msgstr "Виконання коду було скасовано через по�
 #. translators: %1$s is the post type name, %2$s is the post edit link
 #: framework/premium/features/code-editor.php:132
 msgid "%1$s that caused the error: %2$s"
-msgstr "Виникла помилка через «%1$s»: %2$s"
+msgstr "��иникла помилка через «%1$s»: %2$s"
 
 #. translators: %1$s is the singular name of the custom post type, %2$s is the
 #. label of the taxonomy.
@@ -1544,7 +1544,7 @@ msgstr "Товар, на який ви чекаєте, знову в наявн�
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:11
 msgid "Good news! The product you have been waiting for is now back in stock!"
-msgstr "Гарні новини! Товар, на який ви так довго чекали, знову в наявності!"
+msgstr "Гарні новини! Товар, на який ви так довго чекали, знову �� наявності!"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:8
 msgid "Waitlist - Confirm Subscription"
@@ -1983,7 +1983,7 @@ msgstr "Колір межі контейнера"
 
 #: framework/extensions/newsletter-subscribe/admin-static/js/newsletter-block/Edit.js:197
 msgid "Container Background Color"
-msgstr "Ко��ір фону контейнера"
+msgstr "Колір фону контейнера"
 
 #: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:188
 msgid "API Version"
@@ -3429,7 +3429,7 @@ msgstr "Це професійний стартовий сайт"
 
 #: static/js/dashboard/screens/DemoInstall/SingleDemo.js:54
 msgid "Upgrade to any pro plan and get instant access to this starter site and many other features."
-msgstr "Перейдіть на будь-який професійний тариф і отримайте миттєвий доступ до цього стартового сайту та багатьох інших функцій."
+msgstr "Перейдіть на будь-який професійний тариф і отримайте миттєвий доступ до цього стартового сайту ��а багатьох інших функцій."
 
 #: static/js/dashboard/screens/DemoInstall/SingleDemo.js:61
 msgid "Upgrade to the business or agency plan and get instant access to this starter site and many other features."
@@ -3751,7 +3751,7 @@ msgstr "Отримання..."
 
 #: framework/premium/extensions/adobe-typekit/dashboard-static/js/AdobeTypekit.js:164
 msgid "Please enter a valid Project ID to get all fonts."
-msgstr "Введіть дійсний ID проекту, щоб отри��ати всі шрифти."
+msgstr "Введіть дійсний ID проекту, щоб отримати всі шрифти."
 
 #: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:302
 msgid "This provider is used only for testing purposes. It doesnt register any real subscribers."
@@ -3826,7 +3826,7 @@ msgstr "Ярлик активних фільтрів"
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/views/list-filter.php:31
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:37
 msgid "Reset Filters"
-msgstr "Очи��тити фільтри"
+msgstr "Очистити фільтри"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/filter-presenter.php:120
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/Preview.js:107
@@ -4144,7 +4144,7 @@ msgstr "Авто"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:198
 msgid "Custom Height"
-msgstr "Особлива вис��та"
+msgstr "Особлива висота"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:216
 msgid "Panel Columns"
@@ -4556,7 +4556,7 @@ msgstr "Про бренди"
 #: framework/premium/extensions/woocommerce-extra/features/brands/feature.php:412,
 #: framework/premium/extensions/woocommerce-extra/features/brands/feature.php:450
 msgid "About %s"
-msgstr "Про бренд %s"
+msgstr "Про бр��нд %s"
 
 #: framework/premium/extensions/woocommerce-extra/features/brands/feature.php:475,
 #: framework/premium/extensions/woocommerce-extra/features/brands/feature.php:519,
@@ -9029,7 +9029,7 @@ msgstr "Додати варіацію"
 
 #: framework/premium/extensions/local-google-fonts/dashboard-static/js/LocalGoogleFonts.js:258
 msgid "Download a font and serve it directly from your server, this is handy for those who want to comply with GDPR regulations or serve the font via CDN."
-msgstr "Завантажте шрифт і завантажуйте його прямо зі свого сервера. Це зручно для тих, хто хоче дотримуватися правил GDPR або розповсюджувати шрифт через CDN."
+msgstr "Завантажте шрифт і з��вантажуйте його прямо зі свого сервера. Це зручно для тих, хто хоче дотримуватися правил GDPR або розповсюджувати шрифт через CDN."
 
 #: framework/premium/extensions/mega-menu/static/js/SettingsManager.js:200
 msgid "Item Settings"

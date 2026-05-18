@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-01 14:36+0000\n"
+"POT-Creation-Date: 2026-05-14 16:48+0000\n"
 "Project-Id-Version: undefined\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
@@ -1500,7 +1500,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/compare/options.php:277,
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:188,
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:45,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:927,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:929,
 #: framework/premium/extensions/post-types-extra/features/dynamic-data/providers/custom.php:13,
 #: framework/premium/extensions/woocommerce-extra/features/compare/header-items/compare/options.php:18,
 #: framework/premium/extensions/woocommerce-extra/features/wish-list/header-items/wish-list/options.php:18
@@ -1509,7 +1509,7 @@ msgstr ""
 
 #: framework/extensions/newsletter-subscribe/customizer.php:61,
 #: framework/extensions/newsletter-subscribe/ct-newsletter-subscribe/options.php:50
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:244
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:252
 msgid "List ID"
 msgstr ""
 
@@ -1940,7 +1940,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/feature.php:223,
 #: framework/premium/extensions/woocommerce-extra/features/stock-scarcity/feature.php:273,
 #: framework/premium/extensions/woocommerce-extra/features/stock-scarcity/feature.php:296,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:946,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:948,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-layer.php:308
 msgid "Bottom Spacing"
 msgstr ""
@@ -2410,7 +2410,7 @@ msgstr ""
 #: framework/extensions/trending/customizer.php:475,
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/options.php:36,
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/options.php:83,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:873
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:875
 msgid "Button"
 msgstr ""
 
@@ -2603,13 +2603,26 @@ msgstr ""
 msgid "Sorry, you don't have permission to uninstall plugins."
 msgstr ""
 
-#: framework/features/demo-install/required-plugins.php:34
+#: framework/features/demo-install/required-plugins.php:38
 msgid "Sorry, you don't have permission to install plugins."
 msgstr ""
 
-#: framework/features/demo-install/required-plugins.php:46,
-#: framework/features/demo-install/required-plugins.php:41
+#: framework/features/demo-install/required-plugins.php:50,
+#: framework/features/demo-install/required-plugins.php:45
 msgid "No plugins to install."
+msgstr ""
+
+#: framework/features/demo-install/required-plugins.php:81
+msgid "Could not prepare plugin installation."
+msgstr ""
+
+#. translators: %s: Plugin name
+#: framework/features/demo-install/required-plugins.php:101
+msgid "Can't install and activate %s plugin."
+msgstr ""
+
+#: framework/features/demo-install/required-plugins.php:281
+msgid "Plugin is not installed."
 msgstr ""
 
 #: framework/features/demo-install/widgets-import.php:33
@@ -3007,12 +3020,12 @@ msgid "Post copy created."
 msgstr ""
 
 #. translators: %1$s is the error message, %2$s is the line number
-#: framework/premium/features/code-editor.php:132
+#: framework/premium/features/code-editor.php:124
 msgid "Code execution has been canceled due to error: %1$s on line: %2$s"
 msgstr ""
 
 #. translators: %1$s is the post type name, %2$s is the post edit link
-#: framework/premium/features/code-editor.php:148
+#: framework/premium/features/code-editor.php:140
 msgid "%1$s that caused the error: %2$s"
 msgstr ""
 
@@ -3308,7 +3321,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:31,
 #: framework/premium/extensions/woocommerce-extra/features/compare/options.php:147,
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/options.php:84,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:875,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:877,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:72,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:103,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:147,
@@ -5798,7 +5811,7 @@ msgid "In Stock"
 msgstr ""
 
 #: framework/features/blocks/dynamic-data/views/woo-field.php:30,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:357,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:359,
 #: framework/premium/extensions/woocommerce-extra/features/compare/views/table.php:428,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/includes/swatch-element-render.php:47,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/product-mobile-actions.php:23,
@@ -7004,7 +7017,7 @@ msgstr ""
 
 #: framework/premium/extensions/post-types-extra/features/filtering/helpers.php:198,
 #: framework/premium/extensions/woocommerce-extra/features/compare/options.php:276,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:926
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:928
 #: static/js/editor/blocks/query/edit/layers/useTaxonomiesLayers.js:65
 msgid "All"
 msgstr ""
@@ -7976,20 +7989,20 @@ msgid "Quick View Button"
 msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/feature.php:60,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:354
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:356
 msgid ""
 "Sorry, no products matched your selection. Please choose a different "
 "combination."
 msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/feature.php:61,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:355
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:357
 msgid ""
 "Please select some product options before adding this product to your cart."
 msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/feature.php:62,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:356
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:358
 msgid ""
 "Sorry, this product is unavailable. Please choose a different combination."
 msgstr ""
@@ -8268,52 +8281,52 @@ msgstr ""
 msgid "+{items} More"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:600
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:602
 msgid "Display Variations Inline"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:626
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:628
 msgid "Select terms"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:645
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:647
 msgid "Select all"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:646
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:648
 msgid "Select none"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:647
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:649
 msgid "Add new"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:698,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:882,
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:917
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:700,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:884,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:919
 msgid "Swatches"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:749
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:751
 msgid "Swatches removed"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:756
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:758
 msgid "Swatches saved"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:874,
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:876,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:28,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:50,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:146
 msgid "Color"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:876
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:878
 msgid "Mixed"
 msgstr ""
 
-#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:901
+#: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:903
 msgid "Custom Attributes"
 msgstr ""
 
@@ -9390,7 +9403,7 @@ msgstr ""
 
 #: framework/extensions/newsletter-subscribe/admin-static/js/ListPicker.js:14
 #: framework/extensions/newsletter-subscribe/admin-static/js/ListPicker/Implementation.js:72
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:466
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:474
 #: static/js/dashboard/NoTheme.js:83
 #: static/js/dashboard/screens/SiteExport.js:314
 #: static/js/notifications/VersionMismatchNotice.js:110
@@ -9423,33 +9436,37 @@ msgstr ""
 msgid "Newsletter Controls"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:108
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:104
+msgid "Connect Newsletter Provider"
+msgstr ""
+
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:116
 msgid "Provider"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:135
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:143
 msgid "API URL"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:188
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:196
 msgid "API Version"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:198
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:206
 msgid "Pick Mailing Service"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:229
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:237
 msgid "API Key"
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:266
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:274
 msgid ""
 "More information on how to generate an API key for Mailchimp can be found "
 "%shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:284
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:292
 msgid ""
 "More information on how to generate an API key for Mailerlite can be found "
 "%shere%s. Please note that it is required at least one group to be created "
@@ -9457,59 +9474,59 @@ msgid ""
 "group %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:302
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:310
 msgid ""
 "This provider is used only for testing purposes. It doesnt register any real "
 "subscribers."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:316
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:324
 msgid ""
 "More information on how to generate an API key for Klaviyo can be found "
 "%shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:334
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:342
 msgid ""
 "More information on how to generate an API key for Brevo can be found "
 "%shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:352
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:360
 msgid ""
 "More information on how to generate an API key for Kit (ConvertKit) can be "
 "found %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:370
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:378
 msgid ""
 "More information on how to generate an API key for ActiveCampaign can be "
 "found %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:388
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:396
 msgid ""
 "More information on how to generate an API key for Campaign Monitor can be "
 "found %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:406
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:414
 msgid ""
 "More information on how to generate an API key for EmailOctopus can be found "
 "%shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:424
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:432
 msgid ""
 "More information on how to create a list in MailPoet can be found %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:442
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:450
 msgid ""
 "More information on how to create a list in fluentcrm can be found %shere%s."
 msgstr ""
 
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:467
+#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:475
 #: framework/extensions/product-reviews/static/js/ProductReviews.js:96
 #: framework/premium/extensions/mega-menu/static/js/SettingsManager.js:291
 #: framework/premium/extensions/sidebars/static/js/SettingsManager.js:112
@@ -9517,10 +9534,6 @@ msgstr ""
 #: framework/premium/static/js/footer/EditConditions.js:153
 #: framework/premium/static/js/media-video/components/EditVideoMeta.js:106
 msgid "Save Settings"
-msgstr ""
-
-#: framework/extensions/newsletter-subscribe/dashboard-static/js/EditCredentials.js:94
-msgid "Connect Newsletter Provider"
 msgstr ""
 
 #: framework/extensions/newsletter-subscribe/dashboard-static/js/ListPicker.js:103
@@ -10189,12 +10202,12 @@ msgstr ""
 msgid "Insert a specific Content Block anywhere on the site."
 msgstr ""
 
-#: framework/premium/static/js/footer/CloneItem.js:66
+#: framework/premium/static/js/footer/CloneItem.js:68
 #: framework/premium/static/js/header/CloneItem.js:66
 msgid "Clone Item"
 msgstr ""
 
-#: framework/premium/static/js/footer/CloneItem.js:90
+#: framework/premium/static/js/footer/CloneItem.js:98
 #: framework/premium/static/js/header/CloneItem.js:90
 msgid "Remove Item"
 msgstr ""
@@ -10779,27 +10792,27 @@ msgstr ""
 msgid "Installing %s"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:131
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:132
 msgid "Preparing content"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:143
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:144
 msgid "Import options"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:156
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:157
 msgid "Import widgets"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:176
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:177
 msgid "Import content"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:195
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:196
 msgid "Final touches"
 msgstr ""
 
-#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:339
+#: static/js/dashboard/screens/DemoInstall/Installer/useInstaller.js:340
 msgid "Preparing data..."
 msgstr ""
 
@@ -10964,6 +10977,10 @@ msgstr ""
 
 #: static/js/dashboard/screens/DemoInstall/components/Error.js:25
 msgid "Can't Import Starter Site"
+msgstr ""
+
+#: static/js/dashboard/screens/DemoInstall/components/Error.js:37
+msgid "More Information"
 msgstr ""
 
 #: static/js/dashboard/screens/DemoInstall/components/Progress.js:29

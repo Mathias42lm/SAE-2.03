@@ -5,6 +5,7 @@ namespace Blocksy;
 
 class DemoInstallPluginsInstaller {
 	protected $plugins = null;
+	protected $plugin_name = null;
 	protected $is_ajax_request = true;
 
 	public function __construct($args = []) {
@@ -15,12 +16,15 @@ class DemoInstallPluginsInstaller {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$request_plugins = isset($_REQUEST['plugins']) ? sanitize_text_field(wp_unslash($_REQUEST['plugins'])) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request_plugin_name = isset($_REQUEST['plugin_name']) ? sanitize_text_field(wp_unslash($_REQUEST['plugin_name'])) : '';
 
 		if (! $args['plugins'] && $request_plugins !== '') {
 			$args['plugins'] = $request_plugins;
 		}
 
 		$this->plugins = $args['plugins'];
+		$this->plugin_name = $request_plugin_name;
 		$this->is_ajax_request = $args['is_ajax_request'];
 	}
 
@@ -69,8 +73,40 @@ class DemoInstallPluginsInstaller {
 				}
 			}
 
-			$this->prepare_install($single_plugin);
-			$this->plugin_activation($single_plugin);
+			$prepare_install_result = $this->prepare_install($single_plugin);
+
+			if (is_wp_error($prepare_install_result) || $prepare_install_result === false) {
+				$error = is_wp_error($prepare_install_result) ? $prepare_install_result : new \WP_Error(
+					'blocksy_demo_install_plugins_prepare_install_failed',
+					__('Could not prepare plugin installation.', 'blocksy-companion')
+				);
+
+				if ($this->is_ajax_request) {
+					wp_send_json_error([
+						'message' => $error->get_error_message(),
+						'code' => $error->get_error_code(),
+					]);
+				}
+
+				return $error;
+			}
+
+			$plugin_activation_result = $this->plugin_activation($single_plugin);
+
+			if (is_wp_error($plugin_activation_result)) {
+				if ($this->is_ajax_request) {
+					wp_send_json_error([
+						'message' => blocksy_safe_sprintf(
+							/* translators: %s: Plugin name */
+							__('Can\'t install and activate %s plugin.', 'blocksy-companion'),
+							'<b>' . ($this->plugin_name ? $this->plugin_name : $single_plugin) . '</b>'
+						),
+						'code' => $plugin_activation_result->get_error_code(),
+					]);
+				}
+
+				return $plugin_activation_result;
+			}
 
 			if ($single_plugin === 'woocommerce') {
 				if (empty(get_option('woocommerce_db_version'))) {
@@ -236,9 +272,14 @@ class DemoInstallPluginsInstaller {
 			if (! $this->is_plugin_active($full_name)) {
 				return activate_plugin($full_name, '', false, true);
 			}
+
+			return true;
 		}
 
-		return new \WP_Error();
+		return new \WP_Error(
+			'blocksy_demo_install_plugins_not_installed',
+			__('Plugin is not installed.', 'blocksy-companion')
+		);
 	}
 
     public function get_plugin_status($slug) {

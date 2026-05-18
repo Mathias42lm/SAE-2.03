@@ -37,6 +37,6 @@ class Blocksy_WP_Block_Parser extends WP_Block_Parser {
 			}
 		}
 
-		return $result;
+		return apply_filters('blocksy:block-parser:result', $result);
 	}
 }
