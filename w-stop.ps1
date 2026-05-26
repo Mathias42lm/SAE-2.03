@@ -19,28 +19,37 @@ try { docker cp wordpress:/var/www/html/wp-content/uploads "$SAVE_DIR/wp-content
 
 # 2. Rotation de l'ancienne sauvegarde SQL
 if (Test-Path $FILE) {
-    $BACKUP_PATH = "$SAVE_DIR/init-$TIMESTAMP.sql"
-    Move-Item -Path $FILE -Destination $BACKUP_PATH -Force
+    # Si par erreur Windows a créé un dossier init.sql, on le détruit
+    $item = Get-Item $FILE
+    if ($item.PSIsContainer) {
+        Remove-Item -Recurse -Force $FILE
+    } else {
+        $BACKUP_PATH = "$SAVE_DIR/init-$TIMESTAMP.sql"
+        Move-Item -Path $FILE -Destination $BACKUP_PATH -Force
+    }
 }
 
-# 3. Exécution du dump SQL (Sécurisé pour la sérialisation)
-Write-Host "[*] Tentative de dump MariaDB (Extraction interne)..." -ForegroundColor Cyan
+# 3. Exécution du dump SQL (Sécurisation MAXIMALE via Hex-Blob)
+Write-Host "[*] Tentative de dump MariaDB (Extraction interne BLOB)..." -ForegroundColor Cyan
 
-# Suppression préventive d'éventuels vestiges (fichiers ou dossiers) dans le conteneur
-docker exec mariadb rm -rf /tmp/db_dump.sql 2>$null
+# Nettoyage préventif via l'interpréteur bash du conteneur
+docker exec mariadb sh -c "rm -rf /tmp/db_dump.sql"
 
-# Le dump se fait sur un nom temporaire distinct (db_dump.sql)
-docker exec mariadb mariadb-dump -u mathias -proot --default-character-set=utf8mb4 sae -r /tmp/db_dump.sql
+# Le dump se fait avec --hex-blob. C'est LE paramètre qui protège l'arborescence des menus WordPress
+docker exec -e LANG=C.UTF-8 mariadb sh -c "mariadb-dump -u mathias -proot --default-character-set=utf8mb4 --hex-blob sae > /tmp/db_dump.sql"
 $dumpExitCode = $LASTEXITCODE
 
 if ($dumpExitCode -eq 0) {
+    # On force la création d'un fichier vide sur Windows pour éviter que docker cp ne crée un dossier
+    New-Item -ItemType File -Path $FILE -Force | Out-Null
+    
     # On rapatrie le fichier de manière binaire
     docker cp mariadb:/tmp/db_dump.sql $FILE
     
     # Nettoyage
-    docker exec mariadb rm -f /tmp/db_dump.sql
+    docker exec mariadb sh -c "rm -f /tmp/db_dump.sql"
     
-    Write-Host "[+] Dump réussi : $FILE" -ForegroundColor Green
+    Write-Host "[+] Dump réussi et protégé : $FILE" -ForegroundColor Green
 } else {
     Write-Host "[-] Erreur lors du dump. Restauration de l'ancienne sauvegarde..." -ForegroundColor Red
     if (Test-Path $BACKUP_PATH) {
