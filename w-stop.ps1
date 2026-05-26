@@ -23,11 +23,23 @@ if (Test-Path $FILE) {
     Move-Item -Path $FILE -Destination $BACKUP_PATH -Force
 }
 
-# 3. Exécution du dump SQL
-Write-Host "[*] Tentative de dump MariaDB..." -ForegroundColor Cyan
-docker exec mariadb mariadb-dump -u mathias -proot sae | Out-File -FilePath $FILE -Encoding utf8
+# 3. Exécution du dump SQL (Sécurisé pour la sérialisation)
+Write-Host "[*] Tentative de dump MariaDB (Extraction interne)..." -ForegroundColor Cyan
 
-if ($LASTEXITCODE -eq 0) {
+# Suppression préventive d'éventuels vestiges (fichiers ou dossiers) dans le conteneur
+docker exec mariadb rm -rf /tmp/db_dump.sql 2>$null
+
+# Le dump se fait sur un nom temporaire distinct (db_dump.sql)
+docker exec mariadb mariadb-dump -u mathias -proot --default-character-set=utf8mb4 sae -r /tmp/db_dump.sql
+$dumpExitCode = $LASTEXITCODE
+
+if ($dumpExitCode -eq 0) {
+    # On rapatrie le fichier de manière binaire
+    docker cp mariadb:/tmp/db_dump.sql $FILE
+    
+    # Nettoyage
+    docker exec mariadb rm -f /tmp/db_dump.sql
+    
     Write-Host "[+] Dump réussi : $FILE" -ForegroundColor Green
 } else {
     Write-Host "[-] Erreur lors du dump. Restauration de l'ancienne sauvegarde..." -ForegroundColor Red

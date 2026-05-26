@@ -47,9 +47,11 @@ if (Test-Path "./save/init.sql") {
     docker cp ./save/init.sql mariadb:/tmp/init.sql
     
     Write-Host "    -> Exécution de l'import (source)..."
-    # Ajout de --skip-ssl et --default-character-set=utf8mb4
     docker exec mariadb mariadb -umathias -proot --skip-ssl --default-character-set=utf8mb4 -f sae -e "source /tmp/init.sql"
     
+    # Nettoyage du fichier temporaire
+    docker exec mariadb rm /tmp/init.sql
+
     if ($LASTEXITCODE -eq 0) { Write-Host "    -> Base de données importée avec succès." }
 } else {
     Write-Host "    [!] Fichier ./save/init.sql introuvable. Skip." -ForegroundColor Yellow
@@ -75,7 +77,6 @@ docker exec wordpress find /var/www/html -type f -exec chmod 644 {} ";"
 # 8. Auto-Build Symfony (Mode Production Strict)
 Write-Host "[*] Etape 8 : Auto-build de l'application Symfony (Mode Production)..." -ForegroundColor Cyan
 if (docker ps -q -f name=symfony) {
-    
     Write-Host "    -> Suppression du cache résiduel (Dev)..."
     docker exec symfony rm -rf /var/www/html/var/cache/
     
