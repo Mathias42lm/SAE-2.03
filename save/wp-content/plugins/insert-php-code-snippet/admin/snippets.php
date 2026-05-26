@@ -172,7 +172,9 @@ if($xyz_ips_message == 8)
 			<legend><h3>PHP Code Snippets</h3></legend>
 			<?php
 			global $wpdb;
-			if (get_option('xyz_ips_sync_needed') != 0) {
+
+			if ((get_option('xyz_ips_sync_needed') != 0) && (get_option('xyz_ips_show_snippet_usage')==1)) 
+			{
 				echo '<div id="ips-sync-notice" class="notice notice-warning is-dismissible">
 						<p>
 							<strong>Usage Tracking Sync Required.</strong><br>
@@ -340,7 +342,13 @@ echo $placement_text;
 				"SELECT COUNT(*) FROM {$wpdb->prefix}xyz_ips_usage WHERE snippet_id = %d", 
 				$entry->id
 			));
-			 echo $post_count ? "Used in $post_count posts/pages" : "Not used";
+			if ($post_count > 0 && (get_option('xyz_ips_show_snippet_usage')==1)) {
+			  echo 'Used in ' . $count . ' posts/pages';
+			}else {
+			  if(get_option('xyz_ips_show_snippet_usage')!=1)
+			  echo '<span title="Usage details are hidden. Enable &quot;Show Snippet Usage Details&quot; in settings." style="cursor: help;">Hidden</span>';      else
+				echo 'Not used';
+			}
 		}
 		elseif ($entry->insertionMethod == 3) {
 			echo 'Manually triggered';

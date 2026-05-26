@@ -3,7 +3,7 @@
 Plugin Name: Insert PHP Code Snippet
 Plugin URI: http://xyzscripts.com/wordpress-plugins/insert-php-code-snippet/
 Description: Insert and run PHP code in your pages and posts easily using shortcodes. This plugin lets you create a shortcode for any PHP code and use it in your posts, pages, or widgets. It also includes flexible snippet placement options: Automatic, Execute on Demand, and Manual Shortcode.        
-Version: 1.4.5
+Version: 1.4.6
 Author: xyzscripts.com
 Author URI: http://xyzscripts.com/
 Text Domain: insert-php-code-snippet
@@ -113,6 +113,8 @@ function xyz_ips_modal_html() {
     </div>
     <?php
 }
+if (get_option('xyz_ips_sync_needed') == 0)
+{
 // --- update manual shortcode counts ---
 add_action('save_post', function($post_id, $post) {
     if (wp_is_post_autosave($post_id)) return;
@@ -133,4 +135,5 @@ add_action('before_delete_post', function($post_id) {
     global $wpdb;
     $wpdb->delete($wpdb->prefix . 'xyz_ips_usage', ['post_id' => $post_id]);
 });
+}
 ?>

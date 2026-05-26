@@ -109,22 +109,16 @@ function xyz_ips_links($links, $file) {
 }
 add_filter( 'plugin_row_meta','xyz_ips_links',10,2);
 
-if(!function_exists('xyz_ips_page_exists_by_slug'))
-{
-function xyz_ips_page_exists_by_slug( $post_slug ) {
-    $args_posts = array(
-        'post_type'      => 'page',
-        'post_status'    => 'any',
-        'name'           => $post_slug,
-        'posts_per_page' => 1,
-    );
-    $loop_posts = new WP_Query( $args_posts );
-    if ( ! $loop_posts->have_posts() ) {
-        return false;
-    } else {
-        $loop_posts->the_post();
-        return $loop_posts->post->ID;
-    }
+if (!function_exists('xyz_ips_page_exists_by_slug')) {
+    function xyz_ips_page_exists_by_slug($slug) {
+        global $wpdb;
+        return (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT ID FROM {$wpdb->posts} 
+             WHERE post_name = %s 
+             AND post_type = 'page' 
+             LIMIT 1", 
+            $slug
+        ));
 }
 }
 if(!function_exists('xyz_ips_get_link_by_slug'))
